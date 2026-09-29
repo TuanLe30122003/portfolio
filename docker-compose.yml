@@ -1,0 +1,31 @@
+# docker compose up --build
+# Needs backend/.env (Notion settings) and a root .env with REVALIDATE_SECRET (see .env.example).
+services:
+  backend:
+    build: ./backend
+    env_file: ./backend/.env
+    environment:
+      PORT: 4000
+      CORS_ORIGIN: ${SITE_URL:-http://localhost:3000}
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET:?set REVALIDATE_SECRET in .env}
+    ports:
+      - "4000:4000"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:4000/api/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_SITE_URL: ${SITE_URL:-http://localhost:3000}
+    environment:
+      API_URL: http://backend:4000/api
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET:?set REVALIDATE_SECRET in .env}
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy

@@ -1,0 +1,136 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  /* Cool palette: deep navy surfaces, ice-white text, cyan / blue / violet accents. */
+  --color-ink: #060b16;
+  --color-ink-2: #0b1324;
+  --color-ink-3: #121d33;
+  --color-line: rgb(148 178 255 / 0.12);
+  --color-paper: #e6eef9;
+  --color-muted: #8595b3;
+  --color-accent: #5fe3f7;
+  --color-accent-blue: #5b7cfa;
+  --color-accent-violet: #a78bfa;
+
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-twinkle: twinkle 4s ease-in-out infinite;
+  --animate-scroll-cue: scroll-cue 1.8s ease-in-out infinite;
+  --animate-orbit: orbit 60s linear infinite;
+
+  @keyframes float {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0 -18px; }
+  }
+  @keyframes orbit {
+    to { rotate: 360deg; }
+  }
+  @keyframes scroll-cue {
+    0% { translate: 0 -100%; }
+    100% { translate: 0 200%; }
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.35; }
+    50% { opacity: 1; }
+  }
+}
+
+/* Font variables come from next/font in app/layout.tsx. */
+@theme inline {
+  --font-sans: var(--font-be-vietnam), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-unbounded), var(--font-be-vietnam), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-ink);
+}
+
+/* SplitText line masks in the hero (overflow: clip) would cut descenders
+   (g, y, ạ, ộ…). Extend each mask downward without changing the layout. */
+[data-hero-title] > div {
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+/* Layered starfield used by the hero and horizontal sections. */
+.starfield {
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, rgb(255 255 255 / 0.8), transparent),
+    radial-gradient(1px 1px at 80px 120px, rgb(255 255 255 / 0.6), transparent),
+    radial-gradient(1.5px 1.5px at 160px 60px, rgb(255 255 255 / 0.9), transparent),
+    radial-gradient(1px 1px at 240px 180px, rgb(255 255 255 / 0.5), transparent),
+    radial-gradient(1px 1px at 300px 20px, rgb(255 255 255 / 0.7), transparent);
+  background-size: 320px 220px;
+}
+
+/* Notion-flavored Markdown blocks (see components/blog/Markdown.tsx). */
+.prose .notion-callout {
+  display: flex;
+  gap: 0.875rem;
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+  border: 1px solid var(--color-line);
+  background: var(--color-ink-2);
+}
+.prose .notion-callout > :first-child {
+  margin-top: 0;
+}
+.prose details {
+  border: 1px solid var(--color-line);
+  border-radius: 1rem;
+  padding: 0.75rem 1.25rem;
+}
+.prose summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.prose [data-rehype-pretty-code-figure] pre {
+  border: 1px solid var(--color-line);
+  border-radius: 1rem;
+  padding-block: 1rem;
+  font-size: 0.875em;
+}
+.prose [data-rehype-pretty-code-figure] code {
+  display: grid;
+}
+.prose [data-rehype-pretty-code-figure] [data-line] {
+  padding-inline: 1.25rem;
+}
+
+/* Notion inline colors: <span color="red"> / <span color="red_bg"> */
+.prose [data-notion-color="gray"] { color: #9b9a97; }
+.prose [data-notion-color="brown"] { color: #c29a7d; }
+.prose [data-notion-color="orange"] { color: #ff9d4d; }
+.prose [data-notion-color="yellow"] { color: #fcd34d; }
+.prose [data-notion-color="green"] { color: #5fd49a; }
+.prose [data-notion-color="blue"] { color: #7ea2ff; }
+.prose [data-notion-color="purple"] { color: #b58cff; }
+.prose [data-notion-color="pink"] { color: #ff8cc6; }
+.prose [data-notion-color="red"] { color: #f87171; }
+.prose [data-notion-color$="_bg"] {
+  border-radius: 0.25rem;
+  padding-inline: 0.2em;
+  background: rgb(255 255 255 / 0.08);
+}
+.prose [data-notion-color="yellow_bg"] { background: rgb(252 211 77 / 0.2); }
+.prose [data-notion-color="red_bg"] { background: rgb(248 113 113 / 0.2); }
+.prose [data-notion-color="blue_bg"] { background: rgb(91 124 250 / 0.2); }
+.prose [data-notion-color="green_bg"] { background: rgb(95 212 154 / 0.2); }

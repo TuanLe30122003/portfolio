@@ -146,7 +146,11 @@ Lỗi từ Notion (sai token, chưa share database, rate limit) được [`Notio
 ## 8. Triển khai
 
 - **Docker**: `cp .env.example .env` (đặt `REVALIDATE_SECRET`), tạo `backend/.env`, rồi `docker compose up --build`. Frontend build ở chế độ `output: "standalone"`; nếu API chưa chạy lúc build, trang blog sẽ được render ở request đầu tiên rồi cache lại.
-- **Tách dịch vụ**: frontend lên Vercel; backend lên Railway / Render / Fly.io. Đặt `API_URL` (FE) trỏ về backend, `CORS_ORIGIN` (BE) là domain FE, và cùng một `REVALIDATE_SECRET` ở cả hai.
+- **Vercel** (cả hai app): mỗi app là một project riêng, **Root Directory** lần lượt là `frontend` và `backend`; push lên `main` sẽ tự deploy.
+  - Backend chạy như một Vercel Function (preset NestJS). [`backend/vercel.json`](backend/vercel.json) đặt `outputDirectory: "dist"` để Vercel dùng `dist/main.js` do `nest build` biên dịch, thay vì tự biên dịch lại `src/main.ts` (bước đó của Vercel báo lỗi type sai với `import helmet from 'helmet'`).
+  - Biến môi trường — backend: `NOTION_TOKEN`, `NOTION_DATABASE_ID`, `REVALIDATE_SECRET`, `CORS_ORIGIN` (domain FE); frontend: `API_URL` (`https://<backend>.vercel.app/api`), `NEXT_PUBLIC_SITE_URL` (domain FE), `REVALIDATE_SECRET` (giống backend). Đổi biến xong phải redeploy.
+  - Cache Notion của API nằm trong bộ nhớ từng instance: `/api/revalidate` chỉ xoá cache của instance nhận request, các instance khác tự hết hạn sau `CACHE_TTL_SECONDS` (mặc định 5').
+- **Tách dịch vụ khác**: frontend lên Vercel; backend lên Railway / Render / Fly.io. Đặt `API_URL` (FE) trỏ về backend, `CORS_ORIGIN` (BE) là domain FE, và cùng một `REVALIDATE_SECRET` ở cả hai.
 
 ## Ghi chú
 

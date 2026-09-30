@@ -1,4 +1,5 @@
 import type { PageObjectResponse } from '@notionhq/client';
+import { POST_PROPERTIES as P } from '../blog.schema.js';
 import { isPublished, toPostSummary } from './notion-post.mapper.js';
 
 const text = (value: string) => [{ plain_text: value }];
@@ -21,15 +22,15 @@ describe('toPostSummary', () => {
   it('maps Notion properties to a post summary', () => {
     const page = makePage(
       {
-        Name: { type: 'title', title: text('Hello Notion') },
-        Slug: { type: 'rich_text', rich_text: text('hello-notion') },
-        Description: { type: 'rich_text', rich_text: text('First post') },
-        Tags: {
+        [P.title]: { type: 'title', title: text('Hello Notion') },
+        [P.slug]: { type: 'rich_text', rich_text: text('hello-notion') },
+        [P.description]: { type: 'rich_text', rich_text: text('First post') },
+        [P.tags]: {
           type: 'multi_select',
           multi_select: [{ name: 'Next.js' }, { name: 'Notion' }],
         },
-        Date: { type: 'date', date: { start: '2026-09-01' } },
-        Published: { type: 'checkbox', checkbox: true },
+        [P.date]: { type: 'date', date: { start: '2026-09-01' } },
+        [P.published]: { type: 'checkbox', checkbox: true },
       },
       {
         cover: {
@@ -54,15 +55,15 @@ describe('toPostSummary', () => {
 
   it('falls back to the compact page ID when Slug is empty', () => {
     const page = makePage({
-      Name: { type: 'title', title: text('No slug') },
-      Slug: { type: 'rich_text', rich_text: [] },
+      [P.title]: { type: 'title', title: text('No slug') },
+      [P.slug]: { type: 'rich_text', rich_text: [] },
     });
 
     expect(toPostSummary(page).slug).toBe('1f2e3d4c5b6a7980a1b2c3d4e5f6a7b8');
   });
 
   it('tolerates missing or mistyped columns', () => {
-    const page = makePage({ Tags: { type: 'select', select: null } });
+    const page = makePage({ [P.tags]: { type: 'select', select: null } });
 
     expect(toPostSummary(page)).toMatchObject({
       title: 'Untitled',

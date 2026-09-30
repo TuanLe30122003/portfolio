@@ -4,17 +4,17 @@
  *
  * | Column      | Notion type   | Required |
  * | ----------- | ------------- | -------- |
- * | Name        | Title         | yes      |
+ * | Nom         | Title         | yes      |
  * | Slug        | Text          | no — falls back to the page ID |
- * | Description | Text          | no       |
+ * | Lesson Description | Text        | no       |
  * | Tags        | Multi-select  | no       |
  * | Published   | Checkbox      | yes — only checked rows are public |
  * | Date        | Date          | no — used for sorting |
  */
 export const POST_PROPERTIES = {
-  title: 'Name',
+  title: 'Nom',
   slug: 'Slug',
-  description: 'Description',
+  description: 'Lesson Description',
   tags: 'Tags',
   published: 'Published',
   date: 'Date',

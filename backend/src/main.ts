@@ -14,4 +14,7 @@ async function bootstrap() {
   await app.listen(port);
   Logger.log(`API ready at http://localhost:${port}/api`, 'Bootstrap');
 }
-await bootstrap();
+// Not a top-level await: on Vercel, the runtime intercepts `listen()` to grab
+// the server and never calls it back, so awaiting here would keep this module
+// from ever finishing loading (every request would hang).
+void bootstrap();

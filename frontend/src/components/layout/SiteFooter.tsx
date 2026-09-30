@@ -11,7 +11,12 @@ export async function SiteFooter() {
         <p>
           © {site.name} · {localize(site.location, locale)}
         </p>
-        <ul className="flex gap-5">
+        <ul className="flex flex-wrap gap-x-5 gap-y-2">
+          <li>
+            <a href={`mailto:${site.email}`} className="transition-colors hover:text-paper">
+              {site.email}
+            </a>
+          </li>
           {site.socials.map((social) => (
             <li key={social.label}>
               <a href={social.href} target="_blank" rel="noreferrer" className="transition-colors hover:text-paper">

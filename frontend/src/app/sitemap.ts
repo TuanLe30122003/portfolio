@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { projects } from "@/content/portfolio";
 import { site } from "@/content/site";
 import { defaultLocale, locales, localizePath } from "@/i18n/config";
 import { getPosts } from "@/lib/api/blog";
@@ -17,6 +18,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...localized("/", { changeFrequency: "monthly", priority: 1 }),
     ...localized("/blog", { changeFrequency: "weekly", priority: 0.8 }),
+    ...projects.flatMap((project) =>
+      localized(`/projects/${project.slug}`, { changeFrequency: "monthly", priority: 0.7 }),
+    ),
     ...items.flatMap((post) =>
       localized(`/blog/${post.slug}`, { lastModified: post.updatedAt, changeFrequency: "monthly", priority: 0.6 }),
     ),

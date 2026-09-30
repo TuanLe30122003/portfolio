@@ -1,11 +1,17 @@
 import { site } from "@/content/site";
 import { Reveal } from "@/components/motion/Reveal";
 import { Eyebrow } from "@/components/ui/Eyebrow";
-import { getDictionary } from "@/i18n/server";
+import { localize } from "@/i18n/config";
+import { getDictionary, getLocale } from "@/i18n/server";
 
 /** Vertical leg #5 — closing call to action. */
 export async function Contact() {
+  const locale = await getLocale();
   const t = (await getDictionary()).contact;
+  const details = [
+    { label: t.email, value: site.email, href: `mailto:${site.email}` },
+    { label: t.location, value: localize(site.location, locale) },
+  ];
 
   return (
     <section id="contact" className="relative overflow-hidden px-5 py-32 md:px-8 md:py-48">
@@ -33,7 +39,27 @@ export async function Contact() {
         >
           {site.email}
         </a>
-        <ul data-reveal-item className="mt-12 flex flex-wrap gap-3">
+        <dl
+          data-reveal-item
+          aria-label={t.detailsLabel}
+          className="mt-12 grid max-w-3xl gap-6 border-t border-line pt-8 sm:grid-cols-2"
+        >
+          {details.map((item) => (
+            <div key={item.label}>
+              <dt className="font-mono text-xs uppercase tracking-[0.2em] text-muted">{item.label}</dt>
+              <dd className="mt-2 text-lg [overflow-wrap:anywhere]">
+                {item.href ? (
+                  <a href={item.href} className="transition-colors hover:text-accent">
+                    {item.value}
+                  </a>
+                ) : (
+                  item.value
+                )}
+              </dd>
+            </div>
+          ))}
+        </dl>
+        <ul data-reveal-item className="mt-10 flex flex-wrap gap-3">
           {site.socials.map((social) => (
             <li key={social.label}>
               <a

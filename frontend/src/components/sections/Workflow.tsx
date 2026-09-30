@@ -1,11 +1,15 @@
+import Link from "next/link";
 import { clsx } from "clsx";
 import { workflow } from "@/content/portfolio";
 import { HorizontalScroll } from "@/components/motion/HorizontalScroll";
 import { Eyebrow } from "@/components/ui/Eyebrow";
-import { localize } from "@/i18n/config";
+import { localize, localizePath } from "@/i18n/config";
 import { getDictionary, getLocale } from "@/i18n/server";
 
-/** Horizontal leg #2 — full-screen panels, one per step, with giant outlined numbers drifting behind. */
+/**
+ * Horizontal leg #2 — one full-screen panel per working principle, each backed
+ * by a real example, with giant outlined numbers drifting behind.
+ */
 export async function Workflow() {
   const locale = await getLocale();
   const t = (await getDictionary()).workflow;
@@ -46,12 +50,43 @@ export async function Workflow() {
             {item.step}
           </span>
           {/* The first panel is on screen when pinning starts, so it doesn't wait for a reveal. */}
-          <div data-h-reveal={index > 0 ? "" : undefined} className="relative max-w-2xl">
-            <Eyebrow>
-              {t.eyebrow} · {item.step}/{String(workflow.length).padStart(2, "0")}
-            </Eyebrow>
-            <h2 className="mt-6 font-display text-5xl font-black md:text-8xl">{localize(item.title, locale)}</h2>
-            <p className="mt-6 text-lg text-muted md:text-2xl">{localize(item.description, locale)}</p>
+          <div
+            data-h-reveal={index > 0 ? "" : undefined}
+            className="relative grid w-full max-w-6xl gap-8 md:grid-cols-[1.25fr_1fr] md:items-end md:gap-16"
+          >
+            <div>
+              <Eyebrow>
+                {t.eyebrow} · {item.step}/{String(workflow.length).padStart(2, "0")}
+              </Eyebrow>
+              <h2 className="mt-6 font-display text-3xl font-black leading-[1.05] text-balance md:text-6xl">
+                {localize(item.title, locale)}
+              </h2>
+              <p className="mt-6 text-base leading-relaxed text-muted md:text-xl">
+                {localize(item.description, locale)}
+              </p>
+            </div>
+
+            <aside className="rounded-3xl border border-line bg-ink/60 p-6 backdrop-blur md:p-8">
+              <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
+                {t.proofLabel} · <span className="text-accent">{item.proof.context}</span>
+              </p>
+              <p className="mt-4 text-base leading-relaxed md:text-lg">{localize(item.proof.text, locale)}</p>
+              <ul className="mt-5 flex flex-wrap gap-2">
+                {item.tags.map((tag) => (
+                  <li key={tag} className="rounded-full border border-line px-3 py-1 text-xs text-muted">
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+              {item.proof.href && (
+                <Link
+                  href={localizePath(item.proof.href, locale)}
+                  className="mt-5 inline-block text-sm text-accent underline-offset-4 hover:underline"
+                >
+                  {t.readBlog}
+                </Link>
+              )}
+            </aside>
           </div>
         </div>
       ))}

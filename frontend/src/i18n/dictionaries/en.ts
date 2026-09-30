@@ -40,6 +40,18 @@ const en: Dictionary = {
     imageAlt: (title) => `${title} screenshot`,
     githubTitle: "All my code lives on GitHub.",
     githubLink: "View GitHub profile →",
+    viewDetails: "View details →",
+  },
+  project: {
+    back: "← All projects",
+    overview: "Overview",
+    contributions: "Key contributions",
+    role: "Role",
+    year: "Timeline",
+    stack: "Tech stack",
+    website: "Visit website ↗",
+    more: "More projects",
+    notFoundTitle: "Project not found",
   },
   experience: {
     eyebrow: "03 — Experience",
@@ -48,6 +60,8 @@ const en: Dictionary = {
   workflow: {
     label: "How I work",
     eyebrow: "04 — How I work",
+    proofLabel: "In practice",
+    readBlog: "Read the blog →",
   },
   latestPosts: {
     eyebrow: "05 — Blog",
@@ -60,6 +74,9 @@ const en: Dictionary = {
     eyebrow: "06 — Contact",
     title: { before: "Let's ", highlight: "connect", after: "." },
     body: "Email is the fastest way to reach me. You'll find more about my experience on LinkedIn and the source code of my projects on GitHub.",
+    detailsLabel: "Contact details",
+    email: "Email",
+    location: "Location",
   },
   blog: {
     metaTitle: "Blog",

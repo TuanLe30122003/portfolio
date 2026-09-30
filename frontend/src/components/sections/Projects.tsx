@@ -1,9 +1,11 @@
 import Image from "next/image";
+import Link from "next/link";
 import { projects, type Project } from "@/content/portfolio";
 import { site } from "@/content/site";
 import { HorizontalScroll } from "@/components/motion/HorizontalScroll";
+import { ProjectArt } from "@/components/projects/ProjectArt";
 import { Eyebrow } from "@/components/ui/Eyebrow";
-import { localize, type Locale } from "@/i18n/config";
+import { localize, localizePath, type Locale } from "@/i18n/config";
 import { getDictionary, getLocale } from "@/i18n/server";
 import type { Dictionary } from "@/i18n/dictionaries";
 
@@ -92,7 +94,7 @@ function ProjectCard({
     <article
       data-h-item
       data-h-reveal
-      className="group flex w-[min(78vw,520px)] shrink-0 flex-col motion-reduce:snap-center"
+      className="group relative flex w-[min(78vw,520px)] shrink-0 flex-col motion-reduce:snap-center"
     >
       {/* Capped by viewport height so the whole card fits on short laptop screens. */}
       <div className="relative aspect-[16/10] max-h-[36svh] w-full overflow-hidden rounded-3xl border border-line bg-ink-3">
@@ -120,20 +122,18 @@ function ProjectCard({
       </p>
       <div className="mt-2 flex items-start justify-between gap-6">
         <div>
-          <h3 className="font-display text-2xl font-bold">
-            {project.href ? (
-              <a href={project.href} target="_blank" rel="noreferrer" className="transition-colors hover:text-accent">
-                {project.title}
-              </a>
-            ) : (
-              project.title
-            )}
+          <h3 className="font-display text-2xl font-bold transition-colors group-hover:text-accent">
+            {/* Stretched link: the whole card opens the detail page. */}
+            <Link href={localizePath(`/projects/${project.slug}`, locale)} className="after:absolute after:inset-0">
+              {project.title}
+            </Link>
           </h3>
           <p className="mt-2 text-muted">{localize(project.summary, locale)}</p>
         </div>
         <span className="whitespace-nowrap font-mono text-sm text-muted">{project.year}</span>
       </div>
       {/* Pinned to the card's bottom edge so tag rows align across cards. */}
+      <p className="mt-4 text-sm text-accent opacity-80 transition-opacity group-hover:opacity-100">{t.viewDetails}</p>
       <ul className="mt-auto flex flex-wrap gap-2 pt-4">
         {project.tags.map((tag) => (
           <li key={tag} className="rounded-full border border-line px-3 py-1 text-xs text-muted">
@@ -142,28 +142,6 @@ function ProjectCard({
         ))}
       </ul>
     </article>
-  );
-}
-
-/** Generated "planet" artwork used until a real screenshot is provided. */
-function ProjectArt({ hue }: { hue: number }) {
-  return (
-    <div
-      aria-hidden
-      className="absolute inset-0"
-      style={{
-        background: `radial-gradient(circle at 72% 28%, hsl(${hue} 90% 65% / 0.6), transparent 45%), linear-gradient(135deg, hsl(${hue} 55% 18%), hsl(${(hue + 20) % 360} 50% 7%))`,
-      }}
-    >
-      <div className="starfield absolute inset-0 opacity-60" />
-      <div
-        className="absolute bottom-[-35%] left-[22%] aspect-square w-[62%] rounded-full shadow-[0_0_80px_-10px_currentColor]"
-        style={{
-          color: `hsl(${hue} 90% 60%)`,
-          background: `radial-gradient(circle at 35% 30%, hsl(${hue} 100% 88%), hsl(${hue} 85% 55%) 45%, hsl(${hue} 70% 18%))`,
-        }}
-      />
-    </div>
   );
 }
 

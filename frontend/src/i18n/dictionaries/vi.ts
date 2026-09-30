@@ -42,14 +42,28 @@ const vi = {
     imageAlt: (title: string) => `Giao diện ${title}`,
     githubTitle: "Toàn bộ mã nguồn có trên GitHub.",
     githubLink: "Xem hồ sơ GitHub →",
+    viewDetails: "Xem chi tiết →",
+  },
+  project: {
+    back: "← Tất cả dự án",
+    overview: "Tổng quan",
+    contributions: "Đóng góp chính",
+    role: "Vai trò",
+    year: "Thời gian",
+    stack: "Công nghệ",
+    website: "Truy cập website ↗",
+    more: "Dự án khác",
+    notFoundTitle: "Không tìm thấy dự án",
   },
   experience: {
     eyebrow: "03 — Kinh nghiệm",
     titleLines: ["Kinh nghiệm", "& học vấn"],
   },
   workflow: {
-    label: "Quy trình làm việc",
-    eyebrow: "04 — Quy trình làm việc",
+    label: "Cách tôi làm việc",
+    eyebrow: "04 — Cách tôi làm việc",
+    proofLabel: "Trong thực tế",
+    readBlog: "Đọc blog →",
   },
   latestPosts: {
     eyebrow: "05 — Blog",
@@ -63,6 +77,9 @@ const vi = {
     /** Rendered as `${before}<accent>${highlight}</accent>${after}`. */
     title: { before: "Hãy ", highlight: "kết nối", after: " với tôi." },
     body: "Email là cách nhanh nhất để liên hệ với tôi. Thông tin chi tiết về kinh nghiệm có trên LinkedIn, mã nguồn các dự án có trên GitHub.",
+    detailsLabel: "Thông tin liên hệ",
+    email: "Email",
+    location: "Địa điểm",
   },
   blog: {
     metaTitle: "Blog",

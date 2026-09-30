@@ -1,0 +1,11 @@
+# Used by `vercel deploy` from the CLI, which uploads from the repo root (each
+# project's Root Directory is set to frontend/ or backend/). Unlike Git deploys,
+# the CLI doesn't read .gitignore: keep local secrets and build output out.
+.env
+.env.*
+!.env.example
+node_modules
+dist
+.next
+*.tsbuildinfo
+.vercel

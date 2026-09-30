@@ -117,17 +117,7 @@ export class NotionPostsRepository extends PostsRepository {
   private async findPage(slug: string): Promise<PageObjectResponse | null> {
     const dataSourceId = await this.getDataSourceId();
 
-    const { results } = await this.notion.dataSources.query({
-      data_source_id: dataSourceId,
-      filter: {
-        and: [
-          PUBLISHED_FILTER,
-          { property: P.slug, rich_text: { equals: slug } },
-        ],
-      },
-      page_size: 1,
-    });
-    const bySlug = results.find(isFullPage);
+    const bySlug = await this.findPageBySlugProperty(dataSourceId, slug);
     if (bySlug) return bySlug;
 
     if (!isNotionId(slug)) return null;
@@ -144,6 +134,38 @@ export class NotionPostsRepository extends PostsRepository {
       if (
         error instanceof APIResponseError &&
         error.code === APIErrorCode.ObjectNotFound
+      ) {
+        return null;
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * The Slug column is optional: without it every post is addressed by its
+   * page ID (see toPostSummary), so a missing column just means "no match".
+   */
+  private async findPageBySlugProperty(
+    dataSourceId: string,
+    slug: string,
+  ): Promise<PageObjectResponse | null> {
+    try {
+      const { results } = await this.notion.dataSources.query({
+        data_source_id: dataSourceId,
+        filter: {
+          and: [
+            PUBLISHED_FILTER,
+            { property: P.slug, rich_text: { equals: slug } },
+          ],
+        },
+        page_size: 1,
+      });
+      return results.find(isFullPage) ?? null;
+    } catch (error) {
+      if (
+        error instanceof APIResponseError &&
+        error.code === APIErrorCode.ValidationError &&
+        error.message.includes(`property with name or id: ${P.slug}`)
       ) {
         return null;
       }

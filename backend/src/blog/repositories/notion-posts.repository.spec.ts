@@ -1,4 +1,4 @@
-import type { Client } from '@notionhq/client';
+import { APIErrorCode, APIResponseError, type Client } from '@notionhq/client';
 import { NotionPostsRepository } from './notion-posts.repository.js';
 
 const DATA_SOURCE_ID = 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee';
@@ -91,6 +91,30 @@ describe('NotionPostsRepository', () => {
     expect(post).toMatchObject({ slug: 'hello', content: '# Hi' });
     expect(notion.pages.retrieveMarkdown).toHaveBeenCalledWith({
       page_id: 'p1',
+    });
+  });
+
+  it('finds a post by page ID when the database has no Slug column', async () => {
+    const notion = createNotion();
+    notion.dataSources.query.mockRejectedValueOnce(
+      new APIResponseError({
+        code: APIErrorCode.ValidationError,
+        status: 400,
+        message: 'Could not find property with name or id: Slug',
+        headers: new Headers(),
+        rawBodyText: '',
+      }),
+    );
+    notion.pages.retrieve.mockResolvedValue(publishedPage('p3', ''));
+    const repo = new NotionPostsRepository(notion as unknown as Client, {
+      dataSourceId: DATA_SOURCE_ID,
+    });
+
+    const post = await repo.findBySlug('0123456789abcdef0123456789abcdef');
+
+    expect(post).toMatchObject({ content: '# Hi' });
+    expect(notion.pages.retrieve).toHaveBeenCalledWith({
+      page_id: '0123456789abcdef0123456789abcdef',
     });
   });
 
